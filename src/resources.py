@@ -27,6 +27,37 @@ class AssignmentSubmission(Resource):
             for o, n in zip(old_correctnesses, new_correctnesses)
         ]
 
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument(
+            "sid",
+            type=str,
+        )
+        parser.add_argument(
+            "ordinal",
+            type=int,
+            choices=assignment_function_mapping.keys(),
+        )
+
+        try:
+            args = parser.parse_args()
+        except Exception:
+            raise ParameterMissing
+
+        query_filter = {}
+        if args.sid is not None:
+            query_filter["sid"] = args.sid
+        if args.ordinal is not None:
+            query_filter["ordinal"] = args.ordinal
+
+        assignments = Assignment.query.filter_by(**query_filter).all()
+
+        return [{
+            "sid": a.sid,
+            "ordinal": a.ordinal,
+            "correctnesses": self._deserialize_correctnesses(a.correctnesses),
+        } for a in assignments]
+
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument(
