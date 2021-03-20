@@ -5,11 +5,14 @@ from flask_restful import Api
 
 from config import Config
 from errors import errors
+from models import db
 from resources import AssignmentSubmission
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+db.init_app(app)
 
 # Extensions.
 CORS(app)
