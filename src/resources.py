@@ -2,6 +2,7 @@ from flask_restful import reqparse
 from flask_restful import Resource
 
 from errors import ParameterMissing
+from assignments import assignment_function_mapping
 
 
 class AssignmentSubmission(Resource):
@@ -16,10 +17,13 @@ class AssignmentSubmission(Resource):
         parser.add_argument(
             "ordinal",
             type=int,
-            choices=(
-                1,
-            ),
+            choices=assignment_function_mapping.keys(),
             required=True,
+        )
+        parser.add_argument(
+            "answers",
+            required=True,
+            action="append",
         )
 
         try:
@@ -27,5 +31,8 @@ class AssignmentSubmission(Resource):
         except Exception:
             raise ParameterMissing
 
+        correctnesses = assignment_function_mapping[args.ordinal](args.answers)
+
         return {
+            "correctnesses": correctnesses,
         }

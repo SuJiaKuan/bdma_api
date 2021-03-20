@@ -5,6 +5,10 @@ class ParameterMissing(HTTPException):
     pass
 
 
+class InvalidAnswersFormat(HTTPException):
+    pass
+
+
 errors = {
     "EndpointNotFound": {
         "message": "Endpoint is not found",
@@ -25,6 +29,11 @@ errors = {
     "ParameterMissing": {
         "message": "One or more required values are missing",
         "code": "parameter_missing",
+        "status": 400,
+    },
+    "InvalidAnswersFormat": {
+        "message": "Answers format is invalid",
+        "code": "invalid_answers",
         "status": 400,
     },
 }
