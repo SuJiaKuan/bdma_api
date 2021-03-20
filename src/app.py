@@ -39,4 +39,4 @@ api = Api(
     errors=errors,
 )
 
-api.add_resource(AssignmentSubmission, "/assignment")
+api.add_resource(AssignmentSubmission, "/assignments")
