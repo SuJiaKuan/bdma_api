@@ -84,28 +84,31 @@ class AssignmentSubmission(Resource):
 
         correctnesses = assignment_function_mapping[args.ordinal](args.answers)
 
-        past_assignment = Assignment.query.filter_by(
-            sid=args.sid,
-            ordinal=args.ordinal,
-        ).first()
-
-        if past_assignment is not None:
-            updated_correctenesses = self._merge_correctnesses(
-                self._deserialize_correctnesses(past_assignment.correctnesses),
-                correctnesses,
-            )
-            past_assignment.correctnesses = self._serialize_correctnesses(
-                updated_correctenesses,
-            )
-            db.session.commit()
-        else:
-            assignment = Assignment(
+        if args.sid:
+            past_assignment = Assignment.query.filter_by(
                 sid=args.sid,
                 ordinal=args.ordinal,
-                correctnesses=self._serialize_correctnesses(correctnesses),
-            )
-            db.session.add(assignment)
-            db.session.commit()
+            ).first()
+
+            if past_assignment is not None:
+                updated_correctenesses = self._merge_correctnesses(
+                    self._deserialize_correctnesses(
+                        past_assignment.correctnesses,
+                    ),
+                    correctnesses,
+                )
+                past_assignment.correctnesses = self._serialize_correctnesses(
+                    updated_correctenesses,
+                )
+                db.session.commit()
+            else:
+                assignment = Assignment(
+                    sid=args.sid,
+                    ordinal=args.ordinal,
+                    correctnesses=self._serialize_correctnesses(correctnesses),
+                )
+                db.session.add(assignment)
+                db.session.commit()
 
         return {
             "correctnesses": correctnesses,
