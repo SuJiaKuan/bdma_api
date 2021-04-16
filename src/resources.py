@@ -3,6 +3,7 @@ from flask_restful import Resource
 
 from errors import ParameterMissing
 from assignments import assignment_function_mapping
+from midterms import midterm_function_mapping
 from models import db
 from models import Assignment
 
@@ -113,3 +114,35 @@ class AssignmentSubmission(Resource):
         return {
             "correctnesses": correctnesses,
         }
+
+
+class MidtermSubmission(Resource):
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument(
+            "sid",
+            type=str,
+            required=True,
+        )
+        parser.add_argument(
+            "ordinal",
+            type=int,
+            choices=midterm_function_mapping.keys(),
+            required=True,
+        )
+        parser.add_argument(
+            "answers",
+            required=True,
+            action="append",
+        )
+
+        try:
+            args = parser.parse_args()
+        except Exception:
+            raise ParameterMissing
+
+        correctnesses = midterm_function_mapping[args.ordinal](args.answers)
+        print(correctnesses)
+
+        return {}

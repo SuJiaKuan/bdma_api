@@ -7,6 +7,7 @@ from config import Config
 from errors import errors
 from models import db
 from resources import AssignmentSubmission
+from resources import MidtermSubmission
 
 
 app = Flask(__name__)
@@ -40,3 +41,4 @@ api = Api(
 )
 
 api.add_resource(AssignmentSubmission, "/assignments")
+api.add_resource(MidtermSubmission, "/midterm")
