@@ -6,6 +6,7 @@ from assignments import assignment_function_mapping
 from midterms import midterm_function_mapping
 from models import db
 from models import Assignment
+from models import Midterm
 
 
 class AssignmentSubmission(Resource):
@@ -116,7 +117,10 @@ class AssignmentSubmission(Resource):
         }
 
 
-class MidtermSubmission(Resource):
+class MidtermSubmission(AssignmentSubmission):
+
+    def _serialize_answers(self, answers):
+        return "[SEP]".join(answers)
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -143,6 +147,14 @@ class MidtermSubmission(Resource):
             raise ParameterMissing
 
         correctnesses = midterm_function_mapping[args.ordinal](args.answers)
-        print(correctnesses)
+
+        midterm = Midterm(
+            sid=args.sid,
+            ordinal=args.ordinal,
+            answers=self._serialize_answers(args.answers),
+            correctnesses=self._serialize_correctnesses(correctnesses),
+        )
+        db.session.add(midterm)
+        db.session.commit()
 
         return {}
