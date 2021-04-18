@@ -178,9 +178,17 @@ class MidtermSubmission(AssignmentSubmission):
         formal_answers = \
             midterm_function_mapping["formalize"][args.ordinal](answers)
 
-        return {
+        response = {
             "answers": formal_answers,
         }
+
+        if time.time() > Config.MIDTERM_DEADLINE:
+            response["correctnesses"] = \
+                [False] * len(formal_answers) \
+                if midterm is None \
+                else self._deserialize_correctnesses(midterm.correctnesses)
+
+        return response
 
     def post(self):
         if time.time() > Config.MIDTERM_DEADLINE:
