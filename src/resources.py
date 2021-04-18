@@ -2,11 +2,13 @@ from flask_restful import reqparse
 from flask_restful import Resource
 
 from errors import ParameterMissing
+from errors import InvalidMidtermMember
 from assignments import assignment_function_mapping
 from midterms import midterm_function_mapping
 from models import db
 from models import Assignment
 from models import Midterm
+from models import MidtermMember
 
 
 class AssignmentSubmission(Resource):
@@ -125,10 +127,24 @@ class MidtermSubmission(AssignmentSubmission):
     def _deserialize_answers(self, answers):
         return answers.split("[SEP]")
 
+    def _check_member(self, sid, credential):
+        member = MidtermMember.query.filter_by(
+            sid=sid,
+            credential=credential,
+        ).first()
+
+        if member is None:
+            raise InvalidMidtermMember
+
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument(
             "sid",
+            type=str,
+            required=True,
+        )
+        parser.add_argument(
+            "credential",
             type=str,
             required=True,
         )
@@ -143,6 +159,8 @@ class MidtermSubmission(AssignmentSubmission):
             args = parser.parse_args()
         except Exception:
             raise ParameterMissing
+
+        self._check_member(args.sid, args.credential)
 
         midterm = Midterm.query.filter_by(
             sid=args.sid,
@@ -168,6 +186,11 @@ class MidtermSubmission(AssignmentSubmission):
             required=True,
         )
         parser.add_argument(
+            "credential",
+            type=str,
+            required=True,
+        )
+        parser.add_argument(
             "ordinal",
             type=int,
             choices=midterm_function_mapping["correct"].keys(),
@@ -183,6 +206,8 @@ class MidtermSubmission(AssignmentSubmission):
             args = parser.parse_args()
         except Exception:
             raise ParameterMissing
+
+        self._check_member(args.sid, args.credential)
 
         correctnesses = \
             midterm_function_mapping["correct"][args.ordinal](args.answers)

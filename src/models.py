@@ -21,3 +21,11 @@ class Midterm(db.Model):
     ordinal = db.Column(db.Integer, nullable=False)
     answers = db.Column(db.String(), nullable=False)
     correctnesses = db.Column(db.String(), nullable=False)
+
+
+class MidtermMember(db.Model):
+    __tablename__ = "midterm_members"
+
+    id = db.Column(db.Integer, primary_key=True)
+    sid = db.Column(db.String(), nullable=False)
+    credential = db.Column(db.String(), nullable=False)
