@@ -1,6 +1,23 @@
+import shortuuid
+
 from errors import InvalidAnswersFormat
+from models import db
+from models import MidtermMember
 from utils import str2float
 from utils import str2int
+
+
+def init_midterm_members(sids):
+    for sid in sids:
+        member = MidtermMember.query.filter_by(sid=sid).first()
+
+        if member is None:
+            member = MidtermMember(
+                sid=sid,
+                credential=shortuuid.uuid(),
+            )
+            db.session.add(member)
+            db.session.commit()
 
 
 def correct_midterm_section1(answers):
