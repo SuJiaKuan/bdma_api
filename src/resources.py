@@ -148,13 +148,23 @@ class MidtermSubmission(AssignmentSubmission):
 
         correctnesses = midterm_function_mapping[args.ordinal](args.answers)
 
-        midterm = Midterm(
+        past_midterm = Midterm.query.filter_by(
             sid=args.sid,
             ordinal=args.ordinal,
-            answers=self._serialize_answers(args.answers),
-            correctnesses=self._serialize_correctnesses(correctnesses),
-        )
-        db.session.add(midterm)
-        db.session.commit()
+        ).first()
+
+        if past_midterm is not None:
+            past_midterm.answers = self._serialize_answers(args.answers)
+            past_midterm.correctnesses=self._serialize_correctnesses(correctnesses)
+            db.session.commit()
+        else:
+            midterm = Midterm(
+                sid=args.sid,
+                ordinal=args.ordinal,
+                answers=self._serialize_answers(args.answers),
+                correctnesses=self._serialize_correctnesses(correctnesses),
+            )
+            db.session.add(midterm)
+            db.session.commit()
 
         return {}
