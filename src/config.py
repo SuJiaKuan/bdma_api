@@ -4,6 +4,7 @@ import os
 class Config(object):
     API_VERSION = 'v1'
     SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
+    MIDTERM_DEADLINE = 1618999800  # 2021/04/21 18:10, Taipei time
     MIDTERM_MEMBERS = [
         "107810040",
         "106320202",

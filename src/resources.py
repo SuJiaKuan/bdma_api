@@ -1,7 +1,11 @@
+import time
+
 from flask_restful import reqparse
 from flask_restful import Resource
 
+from config import Config
 from errors import ParameterMissing
+from errors import MidtermSubmissionExpiration
 from errors import InvalidMidtermMember
 from assignments import assignment_function_mapping
 from midterms import midterm_function_mapping
@@ -179,6 +183,9 @@ class MidtermSubmission(AssignmentSubmission):
         }
 
     def post(self):
+        if time.time() > Config.MIDTERM_DEADLINE:
+            raise MidtermSubmissionExpiration
+
         parser = reqparse.RequestParser()
         parser.add_argument(
             "sid",

@@ -9,6 +9,10 @@ class InvalidAnswersFormat(HTTPException):
     pass
 
 
+class MidtermSubmissionExpiration(HTTPException):
+    pass
+
+
 class InvalidMidtermMember(HTTPException):
     pass
 
@@ -39,6 +43,11 @@ errors = {
         "message": "Answers format is invalid",
         "code": "invalid_answers",
         "status": 400,
+    },
+    "MidtermSubmissionExpiration": {
+        "message": "Time for midterm submission is expired",
+        "code": "midterm_submission_expiration",
+        "status": 403,
     },
     "InvalidMidtermMember": {
         "message": "Invalid sid or credential for midterm member",
