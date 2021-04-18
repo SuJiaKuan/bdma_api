@@ -22,7 +22,22 @@ def correct_midterm_section1(answers):
     ]
 
 
+def formalize_midterm_section1(answers):
+    if answers is None:
+        return [None] * 10
+
+    if len(answers) != 10:
+        raise InvalidAnswersFormat
+
+    return [str(a) for a in answers]
+
+
 midterm_function_mapping = {
-    1: correct_midterm_section1,
+    "correct": {
+        1: correct_midterm_section1,
+    },
+    "formalize": {
+        1: formalize_midterm_section1,
+    },
 }
 

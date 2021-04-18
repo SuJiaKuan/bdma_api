@@ -122,6 +122,44 @@ class MidtermSubmission(AssignmentSubmission):
     def _serialize_answers(self, answers):
         return "[SEP]".join(answers)
 
+    def _deserialize_answers(self, answers):
+        return answers.split("[SEP]")
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument(
+            "sid",
+            type=str,
+            required=True,
+        )
+        parser.add_argument(
+            "ordinal",
+            type=int,
+            choices=midterm_function_mapping["formalize"].keys(),
+            required=True,
+        )
+
+        try:
+            args = parser.parse_args()
+        except Exception:
+            raise ParameterMissing
+
+        midterm = Midterm.query.filter_by(
+            sid=args.sid,
+            ordinal=args.ordinal,
+        ).first()
+
+        answers = \
+            None \
+            if midterm is None \
+            else self._deserialize_answers(midterm.answers)
+        formal_answers = \
+            midterm_function_mapping["formalize"][args.ordinal](answers)
+
+        return {
+            "answers": formal_answers,
+        }
+
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument(
@@ -132,7 +170,7 @@ class MidtermSubmission(AssignmentSubmission):
         parser.add_argument(
             "ordinal",
             type=int,
-            choices=midterm_function_mapping.keys(),
+            choices=midterm_function_mapping["correct"].keys(),
             required=True,
         )
         parser.add_argument(
@@ -146,7 +184,8 @@ class MidtermSubmission(AssignmentSubmission):
         except Exception:
             raise ParameterMissing
 
-        correctnesses = midterm_function_mapping[args.ordinal](args.answers)
+        correctnesses = \
+            midterm_function_mapping["correct"][args.ordinal](args.answers)
 
         past_midterm = Midterm.query.filter_by(
             sid=args.sid,
