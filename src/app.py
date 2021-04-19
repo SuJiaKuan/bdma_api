@@ -6,7 +6,6 @@ from flask_restful import Api
 from config import Config
 from errors import errors
 from models import db
-from midterms import init_midterm_members
 from resources import AssignmentSubmission
 from resources import MidtermSubmission
 
@@ -15,9 +14,6 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 db.init_app(app)
-
-with app.app_context():
-    init_midterm_members(Config.MIDTERM_MEMBERS)
 
 # Extensions.
 CORS(app)
