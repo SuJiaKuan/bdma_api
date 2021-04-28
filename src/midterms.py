@@ -160,7 +160,7 @@ def correct_midterm_section6(answers):
 
     return [
         abs(str2float(answers[0]) - (-0.7784267838977756)) <= 0.01,
-        abs(str2float(answers[1]) - (-6.475517953250464)) <= 0.01,
+        abs(str2float(answers[1]) - (-5.985974288347788)) <= 0.01,
         answers[2] == "displacement",
     ]
 
