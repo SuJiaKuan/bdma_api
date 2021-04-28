@@ -234,7 +234,7 @@ class MidtermSubmission(AssignmentSubmission):
 
         if past_midterm is not None:
             past_midterm.answers = self._serialize_answers(args.answers)
-            past_midterm.correctnesses=self._serialize_correctnesses(correctnesses)
+            past_midterm.correctnesses = self._serialize_correctnesses(correctnesses)
             db.session.commit()
         else:
             midterm = Midterm(
