@@ -9,5 +9,5 @@ class Assignment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     sid = db.Column(db.String(), nullable=False)
-    ordinal = db.Column(db.Integer, nullable=False)
+    ordinal = db.Column(db.String(), nullable=False)
     correctnesses = db.Column(db.String(), nullable=False)

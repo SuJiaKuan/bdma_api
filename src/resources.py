@@ -70,7 +70,7 @@ class AssignmentSubmission(Resource):
         )
         parser.add_argument(
             "ordinal",
-            type=int,
+            type=str,
             choices=assignment_function_mapping.keys(),
             required=True,
         )

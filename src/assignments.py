@@ -1,19 +1,19 @@
 from errors import InvalidAnswersFormat
+from utils import str2float
 from utils import str2int
 
 
-def correct_assignment1(answers):
-    if len(answers) != 4:
+def correct_assignment_demo(answers):
+    if len(answers) != 3:
         raise InvalidAnswersFormat
 
     return [
-        str2int(answers[0]) == 50,
-        str2int(answers[1]) == 99,
-        str2int(answers[2]) == 70,
-        answers[3] == "Regirock",
+        str2int(answers[0]) == 9487,
+        abs(str2float(answers[1]) - 9487.9487) <= 0.01,
+        answers[2] == "Joe 487",
     ]
 
 
 assignment_function_mapping = {
-    1: correct_assignment1,
+    "demo": correct_assignment_demo,
 }
