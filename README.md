@@ -1,3 +1,3 @@
-# Automated Scoring API for AINTUT 2021
+# Automated Scoring API for BDMA
 
-Automated scoring API for [人工智慧與工程應用課程 2021](https://aintut.github.io/2021/).
+Automated scoring API for [Automated scoring API for 大數據行銷分析師人才培訓班 (Big Data Marketing Analysis Course)](https://sites.google.com/view/ai4u).
